@@ -6,7 +6,9 @@ node_modules/
 
 # Files
 .env
+.git
 .gitignore
 .dockerignore
 README.md
 Dockerfile
+docker-compose.yaml
