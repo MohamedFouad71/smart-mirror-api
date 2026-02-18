@@ -9,10 +9,9 @@ on:
       - main
 
 jobs:
-
-##########
-# Tests
-##########
+  ##########
+  # Tests
+  ##########
   test_and_lint:
     runs-on: ubuntu-latest
 
@@ -23,7 +22,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6.2.0
         with:
-          node-version: '24'
+          node-version: "24"
 
       - name: Install dependencies
         run: npm install
@@ -34,9 +33,9 @@ jobs:
       - name: Run tests
         run: npm test
 
-##########
-# CodeQL Security Analysis
-##########
+  ##########
+  # CodeQL Security Analysis
+  ##########
   codeql-security-analysis:
     name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
@@ -51,35 +50,34 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - language: actions
-          build-mode: none
-        - language: javascript-typescript
-          build-mode: none
-      
+          - language: actions
+            build-mode: none
+          - language: javascript-typescript
+            build-mode: none
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v6.0.2
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v6.2.0
-      with:
-        node-version: '24'
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.2.0
+        with:
+          node-version: "24"
 
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v4
-      with:
-        languages: ${{ matrix.language }}
-        build-mode: ${{ matrix.build-mode }}
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v4
-      with:
-        category: "/language:${{matrix.language}}"
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{matrix.language}}"
 
-
-##########
-# Build and Push
-##########
+  ##########
+  # Build and Push
+  ##########
   build_and_push:
     needs: [test_and_lint, codeql-security-analysis]
     runs-on: ubuntu-latest
