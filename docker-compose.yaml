@@ -5,20 +5,24 @@ services:
     image: mongo
     container_name: mongo
     ports:
-      - "27018:27017" # to prevent conflict with a local mongodb
+      - "27017:27017" # to prevent conflict with a local mongodb
     networks:
       - smart-mirror-net
 
   smart-mirror-api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: mohamedfouad71/smart-mirror-api
     ports:
       - "3000:3000"
     env_file:
       - .env
     depends_on:
       - smart-mirror-mongo
+    networks:
+      - smart-mirror-net
+  smart-mirror-dashboard:
+    image: mohamedfouad71/smart-mirror-dashboard:Latest
+    ports:
+      - "8081:80"
     networks:
       - smart-mirror-net
 
