@@ -1,0 +1,14 @@
+# Directories
+__tests__/
+.github/
+.vscode/
+node_modules/
+
+# Files
+.env
+.git
+.gitignore
+.dockerignore
+README.md
+Dockerfile
+docker-compose.yaml

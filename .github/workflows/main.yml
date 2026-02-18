@@ -9,7 +9,11 @@ on:
       - main
 
 jobs:
-  build:
+
+##########
+# Tests
+##########
+  tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,3 +33,34 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+      - name: Docker Login
+        uses: docker/login-action@v3.7.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+##########
+# Build and Push
+##########
+  build_and_push:
+    needs: tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+
+      - name: Docker Build
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/smart-mirror-api:latest .
+
+      - name: Docker Tag
+        run: |
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/smart-mirror-api:latest \
+          ${{ secrets.DOCKERHUB_USERNAME }}/smart-mirror-api:${{ github.sha }}
+
+      - name: Docker Push
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/smart-mirror-api:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/smart-mirror-api:${{ github.sha }}
