@@ -9,7 +9,11 @@ on:
       - main
 
 jobs:
-  build:
+
+##########
+# Tests
+##########
+  tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,6 +39,17 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+##########
+# Build and Push
+##########
+  build_and_push:
+    needs: tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
 
       - name: Docker Build
         run: |
