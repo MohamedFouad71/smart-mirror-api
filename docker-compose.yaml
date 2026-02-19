@@ -20,7 +20,7 @@ services:
     networks:
       - smart-mirror-net
   smart-mirror-dashboard:
-    image: mohamedfouad71/smart-mirror-dashboard:Latest
+    image: mohamedfouad71/smart-mirror-dashboard:latest
     ports:
       - "8081:80"
     networks:

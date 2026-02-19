@@ -108,7 +108,7 @@ JWT_EXPIRES=7d
 1.  **Configure the `.env` file** (See "Option B" above).
 2.  **Build and Run**
     ```bash
-    docker-compose up --build
+    docker-compose up --pull 
     ```
 
 ---
