@@ -129,24 +129,29 @@ jobs:
         - name: Send Pipeline Email to Team
           run: |
             # 1. Define your team emails (separated by spaces)
-            TEAM_EMAILS="mohamed.fouad.softwareengineer@gmail.com kareemhany.eng@gmail.com"
+            TEAM_EMAILS="${{ secrets.TEAM_EMAILS }}"
 
             # 2. Start the loop
             for EMAIL in $TEAM_EMAILS; do
               echo "Sending email to $EMAIL..."
               
               # 3. Create a personalized message
-              # NOTE: Everything between cat <<EOF and EOF must be flush left!
-            cat <<EOF > message.txt
-            From: Pipeline Bot <mohamed.fouad.softwareengineer@gmail.com>
+              cat <<EOF > message.txt
+            From: Pipeline Bot <mf2976527@gmail.com>
             To: $EMAIL
-            Subject: GitHub Actions: Push to ${{ github.ref_name }}
+            Subject: [${{ github.repository }}] Push to ${{ github.ref_name }}
 
-            ${{ github.actor }} has pushed to the ${{ github.ref_name }} branch.
+            ${{ github.actor }} has pushed to the ${{ github.ref_name }} branch in ${{ github.repository }}.
+
+            Check the commit or workflow run in GitHub for more details.
+
+            Commit Message:
+            ${{ github.event.head_commit.message }}
 
             The automation pipeline has finished running successfully!
 
-            Check the commit or workflow run in GitHub for more details.
+            View the code changes here:
+            ${{ github.event.head_commit.url }}
             EOF
               
               # 4. Send the email via Brevo
