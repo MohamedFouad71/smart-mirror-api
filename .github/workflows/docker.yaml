@@ -3,6 +3,7 @@ on:
 
 jobs:
   build_and_push:
+    name: Docker Build and Push
     runs-on: ubuntu-latest
 
     steps:

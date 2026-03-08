@@ -3,6 +3,7 @@ on:
 
 jobs:
   test:
+    name: jest
     runs-on: ubuntu-latest
     steps:
       - name: checkout code

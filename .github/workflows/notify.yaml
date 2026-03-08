@@ -2,7 +2,8 @@ on:
     workflow_call:
 
 jobs:
-    notify_team:
+    notify:
+        name: Success Email
         runs-on: ubuntu-latest
         steps:
             - name: Send Pipeline Email to Team

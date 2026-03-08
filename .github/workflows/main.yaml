@@ -12,23 +12,26 @@ on:
 
 permissions:
   contents: read
-  security-events: write
-  packages: read
 
 jobs:
   test:
+    name: Unit Tests
     uses: ./.github/workflows/test.yaml
 
-  codeql-security-analysis:
+  security:
+    name: Security Analysis
     uses: ./.github/workflows/codeql-security-analysis.yaml
     secrets: inherit
+    permissions:
+        security-events: write
+        packages: read
 
-  build_and_push:
-    needs: [test, codeql-security-analysis]
+  docker:
+    needs: [test, security]
     uses: ./.github/workflows/docker.yaml
     secrets: inherit
 
-  notify_team:
-    needs: build_and_push
+  notify:
+    needs: docker
     uses: ./.github/workflows/notify.yaml
     secrets: inherit
