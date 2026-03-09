@@ -3,7 +3,7 @@ on:
 
 jobs:
   test:
-    name: jest
+    name: jest and eslint
     runs-on: ubuntu-latest
     steps:
       - name: checkout code
@@ -16,6 +16,10 @@ jobs:
 
       - name: setup dependencies
         run: npm install
+
+      - name: lint
+        run: npm run lint
+        continue-on-error: true
 
       - name: test
         run: npm test
