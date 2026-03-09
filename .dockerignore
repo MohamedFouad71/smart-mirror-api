@@ -12,3 +12,5 @@ node_modules/
 README.md
 Dockerfile
 docker-compose.yaml
+eslint.config.mjs
+.prettierrc
