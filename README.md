@@ -72,6 +72,7 @@ PORT=3000
 MONGO_URI=mongodb://localhost:27017/smart-mirror
 JWT_SECRET=your_super_secret_key
 JWT_EXPIRES=7d
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
 **Option B: For Docker Compose**
@@ -82,6 +83,7 @@ PORT=3000
 MONGO_URI=mongodb://smart-mirror-mongo:27017/smart-mirror
 JWT_SECRET=your_super_secret_key
 JWT_EXPIRES=7d
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
 ---
@@ -167,6 +169,69 @@ JWT_EXPIRES=7d
   "topMistakes": [{ "type": "knees_in", "count": 3 }]
 }
 ```
+
+### 4. User Profile
+
+| Method | Endpoint   | Description                                         |
+| :----- | :--------- | :-------------------------------------------------- |
+| `GET`  | `/api/me`  | Retrieve the current authenticated user's profile.  |
+
+**Example: User Profile Response**
+
+```json
+{
+  "ok": true,
+  "user": {
+    "_id": "64a7c93...",
+    "email": "user@example.com",
+    "profile": {
+      "name": "John Doe",
+      "age": 25,
+      "heightCm": 180,
+      "weightKg": 75,
+      "goal": "Build Muscle"
+    },
+    "createdAt": "2026-03-01T12:00:00.000Z",
+    "updatedAt": "2026-03-05T12:00:00.000Z"
+  }
+}
+```
+
+### 5. Training Schedule
+
+| Method   | Endpoint             | Description                                     |
+| :------- | :------------------- | :---------------------------------------------- |
+| `GET`    | `/api/me/schedule`   | Retrieve the user's current training schedule.  |
+| `POST`   | `/api/me/schedule`   | Generate a new training schedule for the user.  |
+| `PUT`    | `/api/me/schedule`   | Update/regenerate the user's training schedule. |
+| `DELETE` | `/api/me/schedule`   | Delete the user's training schedule.            |
+
+**Example: Schedule Response**
+
+```json
+{
+  "ok": true,
+  "schedule": {
+    "summary_message": "Ready to crush your goals this week! Let's get started.",
+    "schedule": [
+      {
+        "day": "Monday",
+        "focus": "Upper Body Strength",
+        "exercises": [
+          {
+            "name": "Push-ups",
+            "sets": 3,
+            "reps": "10-12",
+            "rest_seconds": 60,
+            "notes": "Keep your core tight and back straight."
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
 
 ---
 
