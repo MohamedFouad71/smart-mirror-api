@@ -5,10 +5,9 @@ services:
     image: mongo
     container_name: mongo
     ports:
-      - '27017:27017' # to prevent conflict with a local mongodb
+      - '27017:27017'
     networks:
       - smart-mirror-net
-
   smart-mirror-api:
     image: mohamedfouad71/smart-mirror-api
     ports:
@@ -20,7 +19,7 @@ services:
     networks:
       - smart-mirror-net
   smart-mirror-dashboard:
-    image: mohamedfouad71/smart-mirror-dashboard:latest
+    image: mohamedfouad71/smart-mirror-dashboard
     ports:
       - '8081:80'
     networks:

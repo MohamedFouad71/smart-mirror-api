@@ -17,6 +17,24 @@ const userSchema = new mongoose.Schema(
       weightKg: Number,
       goal: String,
     },
+    trainingSchedule: {
+      summary_message: String,
+      schedule: [
+        {
+          day: String,
+          focus: String,
+          exercises: [
+            {
+              name: String,
+              sets: Number,
+              reps: String,
+              rest_seconds: Number,
+              notes: String,
+            },
+          ],
+        },
+      ],
+    },
   },
   { timestamps: true }
 );
