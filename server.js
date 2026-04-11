@@ -16,7 +16,7 @@ const server = http.createServer(app);
 // Attach Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: '*', // IMPORTANT: frontend domain
+    origin: '*',
     methods: ['GET', 'POST'],
   },
 });
@@ -29,14 +29,14 @@ io.use((socket, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // ✅ Device token
+    // Device token
     if (decoded.type === 'device' && decoded.deviceId) {
       socket.device = { id: String(decoded.deviceId) };
       socket.authType = 'device';
       return next();
     }
 
-    // ✅ User token (your current behavior)
+    // User token
     const userId = decoded.id || decoded._id || decoded.userId;
     if (!userId) return next(new Error('Unauthorized: bad token payload'));
 
@@ -127,12 +127,12 @@ io.on('connection', (socket) => {
       s.lastReps = 0;
       s.scores = [];
       s.mistakesCount = {};
-      s.deviceId = DEFAULT_DEVICE_ID; // ✅ ثابت لأن عندكم مرايا واحدة
+      s.deviceId = DEFAULT_DEVICE_ID;
 
       // Inform frontend (optional)
       io.to(userId).emit('workout:start', { userId, exerciseType });
 
-      // ✅ Send command to the mirror device
+      // Send command to the mirror device
       io.to(deviceRoom(s.deviceId)).emit('workout:start', {
         userId,
         exerciseType,
@@ -172,7 +172,7 @@ io.on('connection', (socket) => {
       console.log('USER disconnected', { socketId: socket.id, userId, reason });
     });
 
-    return; // ✅ مهم: ما يكملش لباقي المسارات
+    return;
   }
 
   // =========================
@@ -187,7 +187,7 @@ io.on('connection', (socket) => {
     // Mirror -> Backend: progress
     socket.on('ai:progress', (payload = {}) => {
       const userId = payload?.userId ? String(payload.userId) : '';
-      if (!userId) return; // لازم userId عشان نعرف نبعت لمين
+      if (!userId) return;
 
       // Update aggregate session (only if session is running)
       const s = sessions.get(userId);
