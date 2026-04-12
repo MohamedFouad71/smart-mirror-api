@@ -7,6 +7,9 @@ const meRoutes = require('./routes/me.routes');
 const sessionsRoutes = require('./routes/sessions.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
 const { globalLimiter } = require('./middleware/rateLimit');
+const userRoutes = require('./routes/user.routes');
+const faceRoutes = require('./routes/face.routes');
+
 const { notFound, errorHandler } = require('./middleware/error');
 const { loadEnv } = require('./config/env');
 
@@ -27,6 +30,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/me', meRoutes);
 app.use('/api/sessions', sessionsRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/face', faceRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
