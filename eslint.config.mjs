@@ -1,39 +1,39 @@
 import js from '@eslint/js';
+import prettierPlugin from 'eslint-plugin-prettier';
+import prettierConfig from 'eslint-config-prettier';
 import globals from 'globals';
 
 export default [
-  // 1. Base Configuration for all JS files
   js.configs.recommended,
   {
-    files: ['**/*.{js,mjs,cjs}'],
+    files: ['**/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
-      sourceType: 'module', // Default to ESM
+      sourceType: 'module',
       globals: {
-        ...globals.node, // Fixes 'process' errors in server.js, db.js, etc.
+        ...globals.node,
+        ...globals.es2021,
+        ...globals.jest,
       },
+    },
+    plugins: {
+      prettier: prettierPlugin,
     },
     rules: {
-      'no-unused-vars': 'warn', // Changes errors to warnings for 'e', 'err', 'next'
-      'no-undef': 'error',
-    },
-  },
+      // Apply Prettier rules safely
+      ...prettierConfig.rules,
+      'prettier/prettier': 'warn',
 
-  // 2. Specific Override for CommonJS files (if you use require/module.exports)
-  {
-    files: ['**/*.cjs', 'server.js'],
-    languageOptions: {
-      sourceType: 'commonjs',
-    },
-  },
-
-  // 3. Specific Override for Jest Test Files
-  {
-    files: ['**/__tests__/**', '**/*.test.js', '**/*.spec.js'],
-    languageOptions: {
-      globals: {
-        ...globals.jest, // 👈 This fixes 'test' and 'expect' errors
-      },
+      // Your custom rules
+      'no-console': 'off',
+      'consistent-return': 'off',
+      'no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: 'req|res|next|val|err|error|e',
+          varsIgnorePattern: '^_', // This allows any variable starting with _ to be ignored
+        },
+      ],
     },
   },
 ];
