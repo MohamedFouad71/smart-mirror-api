@@ -8,11 +8,13 @@ async function saveSetup(req, res) {
     const user = await User.findByIdAndUpdate(
       userId,
       {
-        language,
-        training,
-        preferences,
-        profile,
-        isSetupComplete: true,
+        $set: {
+          language,
+          training,
+          preferences,
+          profile,
+          isSetupComplete: true,
+        },
       },
       { new: true }
     );
