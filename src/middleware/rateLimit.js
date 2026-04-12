@@ -12,9 +12,17 @@ exports.globalLimiter = rateLimit({
 exports.setupLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
+  message: {
+    ok: false,
+    error: 'Too many setup requests, please try again later'
+  }
 });
 
 exports.authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,
+  message: {
+    ok: false,
+    error: 'Too many authentication requests, please try again later'
+  }
 });
