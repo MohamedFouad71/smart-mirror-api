@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema(
       heightCm: Number,
       weightKg: Number,
       goal: String,
+      informations: String,
     },
     trainingSchedule: {
       summary_message: String,
@@ -34,6 +35,29 @@ const userSchema = new mongoose.Schema(
           ],
         },
       ],
+    },
+    diet: {
+      summary_message: String,
+      weekly_targets: {
+        calories: Number,
+        protein_g: Number,
+        carbs_g: Number,
+        fat_g: Number,
+      },
+      plan: [
+        {
+          day: String,
+          meals: [
+            {
+              type: { type: String }, // e.g., Breakfast
+              name: String,
+              calories: Number,
+              notes: String,
+            },
+          ],
+        },
+      ],
+      generatedAt: { type: Date, default: Date.now },
     },
   },
   { timestamps: true }
