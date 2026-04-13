@@ -189,7 +189,14 @@ GEMINI_API_KEY=your_gemini_api_key
       "age": 25,
       "heightCm": 180,
       "weightKg": 75,
-      "goal": "Build Muscle"
+      "goal": "Build Muscle",
+      "informations": "Some informations about the user to personalize the ai recommendations"
+    },
+    "trainingSchedule": {
+      //
+    },
+    "diet": {
+      //
     },
     "createdAt": "2026-03-01T12:00:00.000Z",
     "updatedAt": "2026-03-05T12:00:00.000Z"
@@ -230,6 +237,62 @@ GEMINI_API_KEY=your_gemini_api_key
     ]
   }
 }
+```
+
+### 6. Diet
+
+| Method   | Endpoint       | Description                        |
+| :------- | :------------- | :--------------------------------- |
+| `GET`    | `/api/me/diet` | Retrieve the user's current diet.  |
+| `POST`   | `/api/me/diet` | Generate a diet for the user.      |
+| `PUT`    | `/api/me/diet` | Update/regenerate the user's diet. |
+| `DELETE` | `/api/me/diet` | Delete the user's diet.            |
+
+**Example: diet Response**
+
+```json
+{
+  "ok": true,
+  "diet": {
+    "summary_message": "A brief, motivating one-sentence nutritional tip or encouragement for the mirror UI.",
+    "weekly_targets": {
+      "calories": 2200,
+      "protein_g": 150,
+      "carbs_g": 200,
+      "fat_g": 70
+    },
+    "plan": [
+      {
+        "day": "Monday",
+        "meals": [
+          {
+            "type": "Breakfast",
+            "name": "Oatmeal with Mixed Berries",
+            "calories": 350,
+            "notes": "Rich in fiber for sustained energy."
+          },
+          {
+            "type": "Lunch",
+            "name": "Grilled Chicken Salad",
+            "calories": 500,
+            "notes": "High protein to support muscle recovery."
+          },
+          {
+            "type": "Dinner",
+            "name": "Baked Salmon with Quinoa",
+            "calories": 600,
+            "notes": "Excellent source of Omega-3s."
+          },
+          {
+            "type": "Snack",
+            "name": "Greek Yogurt",
+            "calories": 150,
+            "notes": "Great for digestion."
+          }
+        ]
+      }
+    ]
+  }
 ```
 
 ---
