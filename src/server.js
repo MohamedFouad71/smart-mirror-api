@@ -2,9 +2,9 @@ const http = require('http');
 const jwt = require('jsonwebtoken');
 const { Server } = require('socket.io');
 
-const { loadEnv } = require('./src/config/env');
-const app = require('./src/app');
-const { connectDB } = require('./src/db');
+const { loadEnv } = require('./config/env');
+const app = require('./app');
+const { connectDB } = require('./db');
 
 loadEnv();
 
