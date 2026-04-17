@@ -1,7 +1,7 @@
 const sessionRepo = require('../repositories/session.repository');
 
 const createSession = async (userId, body) => {
-  const { exerciseType, reps, formScore, mistakes, ts } = body;
+  const { exerciseType, reps, formScore, mistakes } = body;
 
   if (!exerciseType || typeof reps !== 'number') {
     const err = new Error('exerciseType and reps (number) required');
@@ -15,7 +15,6 @@ const createSession = async (userId, body) => {
     reps,
     formScore: formScore ?? null,
     mistakes: Array.isArray(mistakes) ? mistakes : [],
-    ts: ts ? new Date(ts) : new Date(),
   });
 
   return session;
@@ -33,9 +32,9 @@ const listSessions = async (userId, queryParams) => {
   if (exerciseType) query.exerciseType = exerciseType;
 
   if (from || to) {
-    query.ts = {};
-    if (from) query.ts.$gte = new Date(from);
-    if (to) query.ts.$lte = new Date(to);
+    query.createdAt = {};
+    if (from) query.createdAt.$gte = new Date(from);
+    if (to) query.createdAt.$lte = new Date(to);
   }
 
   return await sessionRepo.findAll(query);

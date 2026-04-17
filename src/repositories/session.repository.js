@@ -5,11 +5,11 @@ const create = async (data) => {
 };
 
 const findLatestByUser = async (userId) => {
-  return await Session.findOne({ userId }).sort({ ts: -1 });
+  return await Session.findOne({ userId }).sort({ createdAt: -1 });
 };
 
 const findAll = async (query) => {
-  return await Session.find(query).sort({ ts: -1 }).limit(500);
+  return await Session.find(query).sort({ createdAt: -1 }).limit(500);
 };
 
 const findByIdAndUser = async (id, userId) => {
@@ -19,9 +19,9 @@ const findByIdAndUser = async (id, userId) => {
 const findByUserAndDateRange = async (userId, start, end, extra = {}) => {
   return await Session.find({
     userId,
-    ts: { $gte: start, $lte: end },
+    createdAt: { $gte: start, $lte: end },
     ...extra,
-  });
+  }).sort({ createdAt: -1 });
 };
 
 module.exports = {
