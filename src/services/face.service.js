@@ -24,13 +24,9 @@ const faceLogin = async () => {
     throw err;
   }
 
-  const token = jwt.sign(
-    { userId: data.user_id },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_EXPIRES || '7d',
-    }
-  );
+  const token = jwt.sign({ userId: data.user_id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES || '7d',
+  });
 
   return {
     token,

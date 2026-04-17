@@ -4,27 +4,17 @@ const { rangeToDates } = require('../utils/dateRange');
 const getSummary = async (userId, range = '7d') => {
   const { start, end } = rangeToDates(range);
 
-  const sessions = await sessionRepo.findByUserAndDateRange(
-    userId,
-    start,
-    end
-  );
+  const sessions = await sessionRepo.findByUserAndDateRange(userId, start, end);
 
   const totalSessions = sessions.length;
 
-  const totalReps = sessions.reduce(
-    (acc, s) => acc + (s.reps || 0),
-    0
-  );
+  const totalReps = sessions.reduce((acc, s) => acc + (s.reps || 0), 0);
 
-  const scored = sessions.filter(
-    (s) => typeof s.formScore === 'number'
-  );
+  const scored = sessions.filter((s) => typeof s.formScore === 'number');
 
   const avgFormScore = scored.length
     ? Math.round(
-        scored.reduce((acc, s) => acc + s.formScore, 0) /
-          scored.length
+        scored.reduce((acc, s) => acc + s.formScore, 0) / scored.length
       )
     : null;
 
@@ -35,10 +25,7 @@ const getSummary = async (userId, range = '7d') => {
     for (const m of s.mistakes || []) {
       if (!m?.type) continue;
 
-      mistakeMap.set(
-        m.type,
-        (mistakeMap.get(m.type) || 0) + (m.count || 0)
-      );
+      mistakeMap.set(m.type, (mistakeMap.get(m.type) || 0) + (m.count || 0));
     }
   }
 

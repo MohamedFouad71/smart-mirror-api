@@ -48,13 +48,9 @@ const loginUser = async ({ email, password }) => {
     throw err;
   }
 
-  const token = jwt.sign(
-    { userId: user._id },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_EXPIRES || '7d',
-    }
-  );
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES || '7d',
+  });
 
   return {
     token,

@@ -2,10 +2,7 @@ const asyncHandler = require('express-async-handler');
 const sessionService = require('../services/session.service');
 
 const createSession = asyncHandler(async (req, res) => {
-  const session = await sessionService.createSession(
-    req.user.userId,
-    req.body
-  );
+  const session = await sessionService.createSession(req.user.userId, req.body);
 
   res.status(201).json({ ok: true, session });
 });

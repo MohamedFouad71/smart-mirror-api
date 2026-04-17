@@ -1,23 +1,23 @@
 const userRepo = require('../repositories/user.repository');
 
 const saveUserSetup = async (userId, body) => {
-    const { language, training, preferences, profile } = body;
+  const { language, training, preferences, profile } = body;
 
-    const user = await userRepo.updateById(userId, {
-        language,
-        training,
-        preferences,
-        profile,
-        isSetupComplete: true,
-    });
+  const user = await userRepo.updateById(userId, {
+    language,
+    training,
+    preferences,
+    profile,
+    isSetupComplete: true,
+  });
 
-    if (!user) {
-        const error = new Error('User not found');
-        error.statusCode = 404;
-        throw error;
-    }
+  if (!user) {
+    const error = new Error('User not found');
+    error.statusCode = 404;
+    throw error;
+  }
 
-    return user;
+  return user;
 };
 
 const getCurrentUser = async (userId) => {
@@ -32,9 +32,7 @@ const getCurrentUser = async (userId) => {
   return user;
 };
 
-
-
 module.exports = {
   saveUserSetup,
-  getCurrentUser
+  getCurrentUser,
 };
