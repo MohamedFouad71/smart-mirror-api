@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const { aiGenerationLimiter } = require('../middleware/rateLimit');
+const { aiGenerationLimiter } = require('../middleware/rateLimit.middleware');
 
-const auth = require('../middleware/auth');
+const auth = require('../middleware/auth.middleware');
 const meController = require('../controllers/me.controller');
 
 router.get('/', auth, meController.me);
