@@ -1,12 +1,17 @@
 const http = require('http');
 const jwt = require('jsonwebtoken');
 const { Server } = require('socket.io');
+const { GoogleGenAI } = require('@google/genai');
 
 const { loadEnv } = require('./config/env');
 const app = require('./app');
 const { connectDB } = require('./db');
+const userRepo = require('./repositories/user.repository');
+const CHATBOT_SYSTEM_PROMPT = require('./constants/prompts');
 
 loadEnv();
+
+const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 const PORT = process.env.PORT || 3000;
 
@@ -170,6 +175,62 @@ io.on('connection', (socket) => {
     socket.on('disconnect', (reason) => {
       sessions.delete(userId);
       console.log('USER disconnected', { socketId: socket.id, userId, reason });
+    });
+
+    // ########################## Chatbot Event ###################################
+    socket.on('chat:message', async (payload = {}) => {
+      const GEMINI_MODEL = 'gemini-3-flash-preview';
+      try {
+        let fullResponse = '';
+        const message =
+          typeof payload === 'string'
+            ? payload.trim()
+            : payload?.message
+              ? String(payload.message).trim()
+              : null;
+
+        if (!message)
+          return socket.emit('chat:error', {
+            reason: "message can't be empty",
+          });
+        if (message.length > 2000)
+          return socket.emit('chat:error', { reason: 'message is too long' });
+
+        const userdata = await userRepo.findById(userId);
+        const responseStream = await client.models.generateContentStream({
+          model: GEMINI_MODEL,
+          contents: [{ role: 'user', parts: [{ text: message }] }],
+          config: {
+            systemInstruction: {
+              parts: [
+                {
+                  text:
+                    CHATBOT_SYSTEM_PROMPT +
+                    `\nUser data: ${JSON.stringify(userdata)}` +
+                    `\nCurrent date and time: ${new Date().toLocaleString()}`,
+                },
+              ],
+            },
+          },
+        });
+
+        // sending data piece by piece, must be embedded in the frontend
+        for await (const chunk of responseStream) {
+          const chunkText = chunk.text;
+          if (!chunkText) continue;
+          fullResponse += chunkText;
+          socket.emit('chat:chunk', { text: chunkText });
+        }
+
+        socket.emit('chat:reply:done', { fullText: fullResponse });
+        socket.emit('chat:typing', { isTyping: false });
+      } catch (error) {
+        console.error('Gemini Error:', error);
+        socket.emit('chat:error', {
+          message: 'Internal server problem, try again later',
+        });
+        socket.emit('chat:typing', { isTyping: false });
+      }
     });
 
     return;
