@@ -1,28 +1,58 @@
 const Chat = require('../models/Chat');
+const ChatMessage = require('../models/ChatMessage');
 
-/**
- * @param {Object} title
- * @returns {Promise<Object>}
- */
-const createChat = async (title) => {
-  return Chat.create(title || { title: 'New Chat' });
-};
+class ChatRepository {
+  async createChat(chatData) {
+    return await Chat.create(chatData);
+  }
 
-/**
- *
- * @param {object} chatId
- * @returns {Promise<Object>}
- */
-const getChat = async (chatId) => {
-  return Chat.findOne(chatId);
-};
+  async findChatsByUser(userId, skip, limit) {
+    return await Chat.find({ userId })
+      .select('-userId -__v')
+      .sort({ updatedAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+  }
 
-/**
- * @param {object} chatId
- * @returns {Promise<Object>}
- */
-const deleteChat = async (chatId) => {
-  return Chat.deleteOne(chatId);
-};
+  async countChatsByUser(userId) {
+    return await Chat.countDocuments({ userId });
+  }
 
-module.exports = { createChat, deleteChat };
+  async findChatByIdAndUser(chatId, userId) {
+    return await Chat.findOne({ _id: chatId, userId })
+      .select('-userId -__v')
+      .lean();
+  }
+
+  async findMessagesByChatId(chatId, skip, limit) {
+    return await ChatMessage.find({ chatId })
+      .select('-userId -__v')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+  }
+
+  async countMessagesByChatId(chatId) {
+    return await ChatMessage.countDocuments({ chatId });
+  }
+
+  async deleteChat(chatId, userId) {
+    return await Chat.findOneAndDelete({ _id: chatId, userId });
+  }
+
+  async deleteMessagesByChatId(chatId) {
+    return await ChatMessage.deleteMany({ chatId });
+  }
+
+  async updateChatTitle(chatId, userId, title) {
+    return await Chat.findOneAndUpdate(
+      { _id: chatId, userId },
+      { $set: { title } },
+      { new: true, runValidators: true }
+    ).select('-userId -__v');
+  }
+}
+
+module.exports = new ChatRepository();
